@@ -1,0 +1,33 @@
+Game Data Analyst
+at PlayStation Global
+United Kingdom, London
+Why PlayStation?
+
+PlayStation isn’t just the Best Place to Play — it’s also the Best Place to Work. Today, we’re recognized as a global leader in entertainment producing The PlayStation family of products and services including PlayStation5, PlayStation4, PlayStationVR, PlayStationPlus, PlayStationNow, acclaimed PlayStation software titles from PlayStation Studios, and more.
+
+PlayStation also strives to create an inclusive environment that empowers employees and embraces diversity. We welcome and encourage everyone who has a passion and curiosity for innovation, technology, and play to explore our open positions and join our growing global team.
+
+The PlayStation brand falls under Sony Interactive Entertainment, a wholly-owned subsidiary of Sony Corporation.
+
+Department overview:
+
+In Game Analytics, we work with some of the best game studios in the world -- responsible for developing some of the most recognisable and ambitious console games and franchises on PlayStation, including Uncharted, The Last of Us, Horizon, God of War, and Gran Turismo.
+
+We provide end-to-end analytics services for PlayStation Studios and use data to help them make their amazing games even better. We are looking for talented people to join us in pushing the boundaries of game analytics for PlayStation games.
+
+What you’ll be doing:
+
+You’ll work in our cross-disciplinary team to help game studios use data effectively to improve games. You’ll work with decision-makers to understand their goals, identify opportunities, and inform decisions about features and games across the company. Come join us, and help define and build the future of analytics for PlayStation games.
+What we are looking for:
+
+Adept at working with people and customer behaviour data to inform decisions and improve products
+Fluent in SQL on analytics data warehouses – We use Redshift, but experience with similar ones like Vertica, Netezza, or Postgres are fine
+A strong background in Looker or a similar analytics visualisation tool like Tableau or MicroStrategy
+You can apply data-backed analyses to produce insights that help improve game design
+Excellent communication skills, and can get your point across to game designers, producers, programmers, and executives
+A strong interest in a variety of modern console games.
+Strategic and business-savvy. You know that people don’t always know what they want, or ask for the right things. You can help them figure out what they need, and then make it happen
+Comfortable with statistics, probability, and quantitative analysis methods
+You’re committed to quality as a top priority
+A track record of trying and learning new things
+Bonus points for experience in Python, iPython notebooks, R, or machine learning

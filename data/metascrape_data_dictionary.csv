@@ -1,0 +1,22 @@
+﻿Column Name,Description,Data Type
+game_title,Title of the video game,String
+platform,Platform/console the game was played and reviewed on,String
+other_platforms,Other platforms the game is on,List
+publisher,Publisher of the game,String
+developer,Developer of the game,String
+release_date,Date the game released on,Date
+description,Summary of what the game is about,String
+genre,The genre the game belongs to,String
+ESRB_Rating,Content rating for the game in North America,String
+multiplayer,How many players the game's multiplayer supports,String
+metascore,Average score received from critic reviews,Integer
+num_meta_reviews,Number of critic reviews,Integer
+userscore,Average score received from user reviews,Float
+num_user_reviews,Number of user reviews,Integer
+critic_positive,Number of positive critic reviews,Integer
+critic_mixed,Number of mixed critic reviews,Integer
+critic_negative,Number of negative critic reviews,Integer
+user_positive,Number of positive user reviews,Integer
+user_mixed,Number of mixed user reviews,Integer
+user_negative,Number of negative user reviews,Integer
+URL,URL to the game's metacritic page,String
