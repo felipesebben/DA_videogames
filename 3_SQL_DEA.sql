@@ -4,7 +4,7 @@ LIMIT 10;
 -- How many games are there?
 SELECT DISTINCT COUNT(name) FROM games_scores;
 
--- How many games were released by year?
+-- How many games have been released by year? Which is the first game recorded in our dataset?
 SELECT  release_date, COUNT(DISTINCT(name)) 
 FROM games_scores
 GROUP BY release_date;
@@ -12,54 +12,29 @@ GROUP BY release_date;
 SELECT name FROM games_scores
 WHERE release_date = 1995;
 
--- How many games were released by platform?
+-- How many games have been released by platform?
 SELECT platform, COUNT(name)
 FROM games_scores
 GROUP BY platform
 ORDER BY COUNT(name) DESC;
 
--- How many unique games per platform were released?
-SELECT platform, COUNT(DISTINCT(name))
-FROM games_scores
-GROUP BY platform
-ORDER BY COUNT(DISTINCT(name)) DESC;
 
--- How many unique games were released by plaform every year?
-SELECT release_date, platform, COUNT(DISTINCT(name))
+-- How many games were released by plaform every year?
+SELECT release_date, platform, COUNT(name)
 FROM games_scores
 GROUP BY release_date, platform
-ORDER BY release_date ASC, COUNT(DISTINCT(name)) DESC;
+ORDER BY release_date, COUNT(DISTINCT(name)) DESC;
 
 -- Perfect. Now, how many unique games are there for PlayStation consoles?
-SELECT DISTINCT(name), platform, release_date
-FROM games_scores
-WHERE name NOT IN (
-						'Xbox One',
-						'Xbox',
-						'Switch',
-						'Xbox Series X',
-						'Dreamcast',
-						'Nintendo 64',
-						'Stadia',
-						'Wii U',
-						'Xbox 360',
-						'3DS',
-						'Wii',
-						'Game Boy Advance',
-						'GameCube',
-						'DS',
-						'PC')
-GROUP BY platform, release_date, name
-ORDER BY release_date, platform;
-
-SELECT name, platform FROM games_scores
-WHERE name LIKE 'Star Wars Battlefront II'
-
-SELECT DISTINCT(platform) FROM games_scores
+SELECT name, platform, release_date FROM games_scores 
+WHERE name IN
+	(SELECT name FROM games_scores
+	GROUP BY name
+	HAVING COUNT(name) = 1)
+AND platform LIKE 'PlayStation%'
+ORDER BY release_date;
 
 
-SELECT name, platform FROM games_scores
-WHERE name LIKE 'Reign of Fire';
 
 -- There is a Playstation 4 release in 1999. Let's investigate.
 SELECT name FROM games_scores
@@ -108,7 +83,18 @@ WHERE name = 'The X-Files Game';
 SELECT name, platform FROM games_scores
 WHERE name = 'The X-Files Game';
 
+-- Let's look at some scores now.
+SELECT * FROM games_scores
+LIMIT 20;
 
-
+--		META_SCORE    --
+-- 1. What is the highest, lowest, average, standard deviation, and variance of the meta score?
+SELECT  
+	MAX(meta_score),
+	MIN(meta_score),
+	ROUND(AVG(meta_score),2) as average,
+	ROUND(STDDEV(meta_score),2) as std_dev,
+	ROUND(VARIANCE(meta_score),2) as variance
+FROM games_scores;
 
 
