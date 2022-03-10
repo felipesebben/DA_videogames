@@ -97,4 +97,31 @@ SELECT
 	ROUND(VARIANCE(meta_score),2) as variance
 FROM games_scores;
 
+--2. Which games and in which consoles had a maximum meta score?
+SELECT name, platform
+FROM games_scores
+WHERE meta_score = 99
 
+--3. And how about the minimum scored ones?
+SELECT name, platform
+FROM games_scores
+WHERE meta_score = 20;
+
+--4. Considering now that the average meta score is 71.20, let's find out first how many games per platform scored above the average yearly.
+SELECT COUNT(*), release_date, platform
+FROM games_scores
+WHERE meta_score >= 71.20
+GROUP BY release_date, platform
+ORDER BY release_date, COUNT(*) DESC;
+
+-- And what is the average meta score by each individual console?
+SELECT COUNT(*), platform, ROUND(AVG(meta_score),2) AS avg_score FROM games_scores
+GROUP BY platform;
+
+-- Considering the number of releases, the PlayStation franchise has received solid scores. 
+-- If we could sum all of them and count as one console, what average score would we get?
+SELECT COUNT(*) , ROUND(AVG(meta_score),2) AS avg_score FROM games_scores
+WHERE platform LIKE 'PlayStation%' 
+OR platform LIKE 'PSP';
+
+-- Aha. So, considering all PlayStation consoles, we get an all-time average meta score of 70.90, which is pretty high.
