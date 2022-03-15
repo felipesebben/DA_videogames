@@ -26,14 +26,13 @@ GROUP BY release_date, platform
 ORDER BY release_date, COUNT(DISTINCT(name)) DESC;
 
 -- Perfect. Now, how many unique games are there for PlayStation consoles?
-SELECT name, platform, release_date FROM games_scores 
+SELECT COUNT(name), platform FROM games_scores 
 WHERE name IN
 	(SELECT name FROM games_scores
 	GROUP BY name
 	HAVING COUNT(name) = 1)
 AND platform LIKE 'PlayStation%'
-ORDER BY release_date;
-
+GROUP BY platform;
 
 
 -- There is a Playstation 4 release in 1999. Let's investigate.
@@ -125,3 +124,45 @@ WHERE platform LIKE 'PlayStation%'
 OR platform LIKE 'PSP';
 
 -- Aha. So, considering all PlayStation consoles, we get an all-time average meta score of 70.90, which is pretty high.
+-- USER REVIEW --
+-- Let's take a look at user_review scores before comparing it with meta score.
+--1. What is the highest, lowest, average, standard deviation, and variance of the user review score?
+--  First, let's convert user review to an integer so that we can later on compare it with the meta score.
+ALTER TABLE games_scores
+	ALTER COLUMN user_review TYPE bigint
+	USING games_scores.user_review * 10;
+	
+SELECT 
+	MAX(user_review),
+	MIN(user_review),
+	ROUND(AVG(user_review),2) as average,
+	ROUND(STDDEV(user_review),2) as std_dev,
+	ROUND(VARIANCE(user_review),2) as variance
+FROM games_scores;
+
+--2. Which games and in which consoles had a maximum user review?
+SELECT name, platform, user_review
+FROM games_scores
+WHERE user_review >= 97;
+
+--3. And how about the bottom rated?
+SELECT name, platform
+FROM games_scores
+WHERE user_review = 2;
+
+--4. Considering now that the average user_review is 69.91, let's find out first how many games per platform scored above the average yearly.
+SELECT COUNT(*), release_date, platform
+FROM games_scores
+WHERE user_review >= 69.91
+GROUP BY release_date, platform
+ORDER BY release_date, COUNT(*) DESC;
+
+-- Hm, a PlayStation Vita game in 2000? I don't think so. Let's fix it.
+SELECT name FROM games_scores
+WHERE platform LIKE '%Vita' AND release_date = 2000
+UPDATE games_scores
+SET platform = 'PlayStation',
+	release_date = 2000
+WHERE name = 'Evil Dead: Hail to the King' AND platform LIKE '%Vita';
+
+
