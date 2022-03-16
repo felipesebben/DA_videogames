@@ -151,11 +151,11 @@ FROM games_scores
 WHERE user_review = 2;
 
 --4. Considering now that the average user_review is 69.91, let's find out first how many games per platform scored above the average yearly.
-SELECT COUNT(*), release_date, platform
+SELECT release_date, COUNT(*), platform
 FROM games_scores
 WHERE user_review >= 69.91
 GROUP BY release_date, platform
-ORDER BY release_date, COUNT(*) DESC;
+ORDER BY release_date;
 
 -- Hm, a PlayStation Vita game in 2000? I don't think so. Let's fix it.
 SELECT name FROM games_scores
@@ -164,5 +164,91 @@ UPDATE games_scores
 SET platform = 'PlayStation',
 	release_date = 2000
 WHERE name = 'Evil Dead: Hail to the King' AND platform LIKE '%Vita';
+
+
+
+SELECT name, platform, release_date 
+FROM games_scores
+WHERE release_date BETWEEN 2000 AND 2008 
+AND platform LIKE 'PlayStation%'
+GROUP BY name, platform, release_date
+ORDER BY release_date
+
+
+
+UPDATE games_scores
+SET platform = 'Nintendo 64',
+	release_date = 2000
+WHERE name LIKE '%Exotica' AND platform LIKE 'PlayStation%';
+
+SELECT * FROM games_scores
+LIMIT 20
+
+-- 5. How have users rated PlayStation games?
+SELECT COUNT(*), ROUND(AVG(user_review)), platform
+FROM games_scores
+WHERE platform LIKE 'PlayStation%' --AND platform LIKE 'PSP'
+GROUP BY platform
+ORDER BY platform;
+
+-- It seems that scores have lowered as new PS consoles were released. PlayStation has a much smaller sample, yet the 3 following generations have similar game releases.
+-- Has this score changed through the years?
+SELECT COUNT(*), release_date, ROUND(AVG(user_review)) AS avg_score, platform
+FROM games_scores
+WHERE platform LIKE 'PlayStation%'
+GROUP BY platform, release_date
+ORDER BY release_date;
+
+SELECT name, platform, release_date, meta_score
+FROM games_scores
+WHERE meta_score > 
+	(SELECT ROUND(AVG(meta_score),2)
+	FROM games_scores)
+	AND platform LIKE 'PlayStation%'
+GROUP BY 1, 2, 3, 4
+ORDER BY release_date, meta_score DESC;
+
+-- 6. Let's now see which games have performed above the average in both score methods.
+
+SELECT name, platform, release_date, meta_score, user_review
+FROM games_scores
+WHERE meta_score > 
+	(SELECT ROUND(AVG(meta_score),2)
+	FROM games_scores)
+AND user_review >
+	(SELECT ROUND(AVG(user_review),2)
+	FROM games_scores)	
+AND platform LIKE 'PlayStation%'
+GROUP BY 1, 2, 3, 4, 5
+ORDER BY release_date DESC, meta_score DESC;
+
+-- 7. Now, let's add another column containing the average score obtained from the two scores.
+ALTER TABLE games_scores
+ADD COLUMN avg_meta_user NUMERIC;
+
+UPDATE games_scores
+SET avg_meta_user = (meta_score + user_review)/ 2
+
+SELECT * FROM games_scores
+ORDER BY avg_meta_user DESC
+LIMIT 100
+
+-- Cool, now we can see top performing games according to two different classifications!
+-- It's time to take a look at our ratings table.
+SELECT * FROM games_ratings
+LIMIT 100;
+
+-- Let's first count the number of games according to the esrb rating.
+-- Consider that:
+-- 		E: Everyone
+--		T: Teen, suitable for ages 13 and up.
+--		M: Mature, suitable for ages 17 and older.
+SELECT COUNT(*), esrb_rating
+FROM games_ratings
+GROUP BY esrb_rating;
+
+
+
+
 
 
