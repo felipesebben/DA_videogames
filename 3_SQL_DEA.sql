@@ -247,8 +247,115 @@ SELECT COUNT(*), esrb_rating
 FROM games_ratings
 GROUP BY esrb_rating;
 
+-- What is "ET", though? Let's see which games are rated as such.
+SELECT title, esrb_rating
+FROM games_ratings
+WHERE esrb_rating = 'ET';
 
+-- Ok, after a quick research on the esrb website, these games are rated as 'E10+', which basically means everyone that is older than 10.
+-- Let's rename this category so that it reflects the proper nomenclature.
+UPDATE games_ratings
+SET esrb_rating = 'E10+'
+WHERE esrb_rating = 'ET';
 
+SELECT title, esrb_rating
+FROM games_ratings
+WHERE esrb_rating = 'E10+';
 
+-- Nice! Let's take a look at the dataset and explore it a bit further now.
+SELECT * FROM games_ratings
+LIMIT 100;
+
+-- Ok, now, the next challenge is to figure out which platform is '1' and which is '0' in the 'console' column. Let's do that before joining both tables.
+SELECT title FROM games_ratings
+WHERE console = 0
+AND title LIKE 'Final Fantasy%';
+
+-- Ok, we know that '1' does NOT stand for PlayStation games, as its unique releases are associated with '0'. God of War and Final Fantasy games, for instance, are found when conditioning the 'console' column as '0'.
+-- Let's take a look at the different ratings by making several queries:
+
+-- 1. To be a E-rated game, what are the contents that it must not display? Let's see E-rated games and their content.
+-- First, there's a typo. The column 'strong_janguage' was an obvious mistake. Let's fix it.
+ALTER TABLE games_ratings
+RENAME COLUMN strong_janguage TO strong_language;
+
+SELECT COUNT(*) FROM games_ratings
+WHERE esrb_rating = 'E'
+	AND alcohol_reference = 0
+	AND animated_blood = 0
+	AND blood = 0
+	AND blood_and_gore = 0
+	AND cartoon_violence = 0
+	AND crude_humor = 0
+	AND drug_reference = 0
+	AND fantasy_violence = 0
+	AND intense_violence = 0
+	AND language = 0
+	AND lyrics = 0
+	AND mature_humor = 0
+	AND mild_blood = 0
+	AND mild_cartoon_violence = 0
+	AND mild_fantasy_violence = 0
+	AND mild_language = 0
+	AND mild_lyrics = 0
+	AND mild_suggestive_themes = 0
+	AND mild_violence = 0
+	AND nudity = 0
+	AND partial_nudity = 0
+	AND sexual_content = 0
+	AND sexual_themes = 0
+	AND simulated_gambling = 0
+	AND strong_language = 0
+	AND strong_sexual_content = 0
+	AND suggestive_themes = 0
+	AND use_of_alcohol = 0
+	AND use_of_drugs_and_alcohol = 0
+	AND violence = 0
+-- There are 273 games in which no descriptor was found. These games are 100% E-rated. But are all the 'E' category games included in these 273 games? Let's see.
+
+SELECT COUNT(*) FROM games_ratings
+WHERE esrb_rating = 'E';
+
+-- There's a total number of 416 E-rated games,.
+-- Find out how to find the difference between both, divided by the total and multiplied by 100. We should get the percentage of games that are have some content restriction.
+SELECT  DISTINCT(
+	CAST((SELECT COUNT(*) FROM games_ratings
+	WHERE esrb_rating = 'E'
+		AND alcohol_reference = 0
+		AND animated_blood = 0
+		AND blood = 0
+		AND blood_and_gore = 0
+		AND cartoon_violence = 0
+		AND crude_humor = 0
+		AND drug_reference = 0
+		AND fantasy_violence = 0
+		AND intense_violence = 0
+		AND language = 0
+		AND lyrics = 0
+		AND mature_humor = 0
+		AND mild_blood = 0
+		AND mild_cartoon_violence = 0
+		AND mild_fantasy_violence = 0
+		AND mild_language = 0
+		AND mild_lyrics = 0
+		AND mild_suggestive_themes = 0
+		AND mild_violence = 0
+		AND nudity = 0
+		AND partial_nudity = 0
+		AND sexual_content = 0
+		AND sexual_themes = 0
+		AND simulated_gambling = 0
+		AND strong_language = 0
+		AND strong_sexual_content = 0
+		AND suggestive_themes = 0
+		AND use_of_alcohol = 0
+		AND use_of_drugs_and_alcohol = 0
+		AND violence = 0) AS FLOAT)  / 
+	CAST((SELECT COUNT(*) FROM games_ratings
+	WHERE esrb_rating = 'E') AS FLOAT) * 100)
+FROM games_ratings;
+
+-- Awesome! That was difficult, but we've managed to get the figure: 65.62% of E-rated games have no restriction whatsoever.
+-- Let's find out which games are these and in which platforms do they run.
 
 
