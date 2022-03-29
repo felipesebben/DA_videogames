@@ -356,6 +356,47 @@ SELECT  DISTINCT(
 FROM games_ratings;
 
 -- Awesome! That was difficult, but we've managed to get the figure: 65.62% of E-rated games have no restriction whatsoever.
--- Let's find out which games are these and in which platforms do they run.
+
+SELECT console, COUNT(console), esrb_rating FROM games_ratings
+GROUP BY console, esrb_rating
+ORDER BY console, esrb_rating
 
 
+-- What is the percentage of each esrb rating for PlayStation games when compared to other platforms?
+SELECT console, esrb_rating, ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(),2) AS "rating_percentage"
+FROM games_ratings
+GROUP BY console, esrb_rating
+ORDER BY console, esrb_rating
+
+-- As we can see, PlayStation games concentrate their audience in the middle - almost 20 percent of its games are T-rated, while E and M ratings come last.
+
+-- Now, let's take a look at the content of each game and see what we can get out of it.
+SELECT * FROM games_ratings
+LIMIT 10;
+
+-- Let's join both tables now and compare scores and ratings. Let's order them first by meta score.
+
+SELECT games_ratings.title, games_scores.meta_score, games_ratings.esrb_rating FROM games_ratings
+INNER JOIN games_scores
+	ON games_ratings.title = games_scores.name
+ORDER BY meta_score DESC;
+
+-- Mature-rated games seem to be on top. Let's check the number of games per category that have scored above average (69.91).
+
+SELECT 
+	COUNT(games_ratings.esrb_rating) AS count_by_ratings, 
+	games_ratings.esrb_rating 
+FROM games_ratings
+INNER JOIN games_scores
+	ON games_ratings.title = games_scores.name
+WHERE games_scores.meta_score > 69.91
+GROUP BY games_ratings.esrb_rating;
+
+
+SELECT 
+	MAX(user_review),
+	MIN(user_review),
+	ROUND(AVG(user_review),2) as average,
+	ROUND(STDDEV(user_review),2) as std_dev,
+	ROUND(VARIANCE(user_review),2) as variance
+FROM games_scores;
